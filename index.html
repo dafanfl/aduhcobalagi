@@ -2,12 +2,17 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <title>Peta Masjid UNDIP dan Sekitarnya</title>
+        <link rel="icon" href= "https://i.ibb.co/dgtyQvh/LOGO-UNDIP-1.png" type=”image/x-icon”/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
         <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <link rel="stylesheet" href="plugins/betterscale/L.Control.BetterScale.css">
+        <link rel="stylesheet" href="plugins/easyprint/leaflet.easyPrint.css">
         <style>
         html, body, #map {
             width: 100%;
@@ -30,7 +35,10 @@
         <script src="js/rbush.min.js"></script>
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
         <script src="data/building_mosque_1.js"></script>
+        <script src="plugins/betterscale/L.Control.BetterScale.js"></script>
+        <script src="plugins/easyprint/leaflet.easyPrint.js"></script>
         <script>
         var highlightLayer;
         function highlightFeature(e) {
@@ -49,11 +57,34 @@
         }
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[-7.05662367197245,110.42226324817568],[-7.046230912156856,110.44361500791477]]);
+        }).fitBounds([[-7.057341756058401,110.42362486686514],[-7.046949012355393,110.44497662660423]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
         L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        //Title
+var title = new L.Control();
+		title.onAdd = function (map) {
+		   this._div = L.DomUtil.create('div', 'info');
+		   this.update();
+		   return this._div;
+		};
+		title.update = function () {
+		   this._div.innerHTML = '<h2>Peta Masjid UNDIP dan Sekitarnya</h2>KOTA SEMARANG'
+		};
+		title.addTo(map); 
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
         var bounds_group = new L.featureGroup([]);
         function setBounds() {
         }
@@ -134,6 +165,20 @@
         var baseMaps = {};
         L.control.layers(baseMaps,{'<img src="legend/building_mosque_1.png" /> building_mosque': layer_building_mosque_1,"OpenStreetMap": layer_OpenStreetMap_0,}).addTo(map);
         setBounds();
+        //easyPrint
+
+L.easyPrint({
+	title: 'My awesome print button',
+	position: 'bottomright',
+	sizeModes: ['A4Portrait', 'A4Landscape']
+}).addTo(map);
+
+        //betterscale
+
+	L.control.betterscale({
+	   metric: true,
+	   imperial: false
+	}).addTo(map);
         </script>
     </body>
 </html>
